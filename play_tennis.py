@@ -8,14 +8,10 @@ Original file is located at
 """
 
 import pandas as pd
-import numpy as np
-import textblob as txb
-import matplotlib.pyplot as plt
 import tkinter as tk
-from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score as acs
 from sklearn.model_selection import train_test_split as tts
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg as fctk
+from sklearn.linear_model import LogisticRegression as lr
 
 df = pd.read_csv("https://raw.githubusercontent.com/shivjain123/Play_Tennis-CSV/master/PlayTennis.csv")
 
@@ -100,13 +96,14 @@ results = pd.DataFrame(yes_no_list)
 
 weather_train, weather_test, results_train, results_test = tts(weather_inf, results, train_size = 0.8, random_state = 42)
 
-lr = LogisticRegression(random_state =  0)
-lr.fit(weather_train, results_train)
+model = lr(random_state = 0)
 
-y_pred = lr.predict(weather_test)
-ac_score = acs(results_test, y_pred)
+model.fit(weather_train, results_train)
 
-print(f"The Accuracy Score from Logistic Regression is {ac_score}.")
+y_pred_gnb = model.predict(weather_test)
+acs_gnb = acs(results_test, y_pred_gnb)
+
+print(f"The Accuracy Score from Navie Bayes Algorithm is {acs_gnb}.")
 
 #tkinter GUI
 root = tk.Tk()
@@ -152,7 +149,7 @@ def values():
  humidity = int(entry3.get())
  # global Open our 4rd input variable
  windy = int(entry4.get())
- prediction = lr.predict([[outlook, temp, humidity, windy]])
+ prediction = model.predict([[outlook, temp, humidity, windy]])
  if prediction == 1:
    prediction = "The Weather is suitable for playing Tennis."
  else:
